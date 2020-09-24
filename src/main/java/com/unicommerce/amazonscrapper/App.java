@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -23,15 +23,17 @@ import java.util.logging.Logger;
  */
 public class App 
 {
-	static final String chromeDriverPath = "src/main/chromedriver.exe" ;
-	static final String amazonUrl = "https://www.amazon.asad";
+	static final String chromeDriverPath = "chromedriver.exe" ;
+	static final String amazonUrl = "https://www.amazon.in";
 	static Logger logger = Logger.getLogger(App.class.getName());
+	static final int TOP_SEARCH_COUNT = 4;
 
 	public static void main( String[] args ) throws JsonProcessingException
 	{
+
 		// Set logger level to INFO
 		logger.setLevel(Level.INFO);
-		
+
 		// Setup Chrome Driver. Disable redundant logging
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 		System.setProperty("webdriver.chrome.silentOutput", "true");
@@ -47,51 +49,71 @@ public class App
 
 		// Request the driver to invoke amazon URL
 		try {
-			logger.info("Contacting amazon's URL");
+			logger.info("Contacting "+amazonUrl);
 			driver.get(amazonUrl);
 		} catch(WebDriverException e) {
 			logger.severe("Cannot access Amazon. Please check internet connection and/or URL");
 			System.exit(0);
 		}
-		
+
+		logger.info("Connection to amazon successful");
+
 		// Initialize an Element Getter
 		SearchElementGetter elementGetter = new SearchElementGetter(driver);
-		
-		WebElement searchbox = elementGetter.getSearchBox();
-		//Type in the search term in the search box
-		searchbox.sendKeys(args[0]);
-		
-		WebElement submit = elementGetter.getSubmitButton();
-		// Simulate a click on the submit button
-		submit.click();
-		
+
+		try {
+			logger.info("Getting the Search Box");
+			WebElement searchbox = elementGetter.getSearchBox();
+			//Type in the search term in the search box
+
+			logger.info("Typing search term in the Search Box");
+			searchbox.sendKeys(args[0]);
+
+			WebElement submit = elementGetter.getSubmitButton();
+			// Simulate a click on the submit button
+			submit.click();
+
+			logger.info("Submitted the search term");
+		} catch(NoSuchElementException e) {
+			logger.info("Search Box and/or submit button not found on amazon's site. Please update the selectors.");
+			System.exit(0);
+		}
+
+		logger.info("Parsing product details for the top "+TOP_SEARCH_COUNT+" products");
 		List<WebElement> searchResultsDiv = elementGetter.getSearchResult();
-		List<ProductDetail> searchResults = new ArrayList<ProductDetail>();
-		
+		List<Product> products = new ArrayList<Product>();
+
 		// Now iterate all the search results to populate product details
-		for(int i = 0; i < Integer.parseInt(args[1]); i++) {
-			ProductDetail productDetail = new ProductDetail();
+		for(int i = 0; i < TOP_SEARCH_COUNT && i<searchResultsDiv.size(); i++) {
+			Product product = new Product();
 			WebElement parentElement = searchResultsDiv.get(i);
 			String price = elementGetter.getElement(PRODUCT_ELEMENT_TYPE.PRODUCT_PRICE, parentElement);
-			String link = searchResultsDiv.get(i).findElement(By.xpath(".//h2//a")).getAttribute("href");
-			String name = searchResultsDiv.get(i).findElement(By.xpath(".//h2//a")).getText();
-			String imgLink = searchResultsDiv.get(i).findElement(By.xpath(".//img")).getAttribute("src");
-			productDetail.setProductName(name);
-			productDetail.setProductLink(link);
-			productDetail.setProductPrice(price);
-			productDetail.setProductImageUrl(imgLink);
-			searchResults.add(productDetail);
+			String link = elementGetter.getElement(PRODUCT_ELEMENT_TYPE.PRODUCT_LINK, parentElement);
+			String name = elementGetter.getElement(PRODUCT_ELEMENT_TYPE.PRODUCT_NAME, parentElement);
+			String imgLink = elementGetter.getElement(PRODUCT_ELEMENT_TYPE.IMAGE_URL, parentElement);
+
+			product.setProductName(name);
+			product.setProductLink(link);
+			product.setProductPrice(price);
+			product.setProductImageUrl(imgLink);
+			products.add(product);
 		}
 
-
-		for(ProductDetail result : searchResults) {
-			driver.get(result.getProductLink());
-			System.out.println(result.getProductLink());
-			result.setBestProductReview(driver.findElement(By.xpath("//div[@data-hook='review-collapsed']//span")).getText());
+		logger.info("Product Details Parsed. Now fetching top review for each product.");
+		// Now that you have the product link for each product, use the link to fetch product review
+		for(Product product : products) {
+			driver.get(product.getProductLink());
+			try {
+				logger.info("Fetching Best Review for "+product.getProductName());
+				product.setBestProductReview(elementGetter.getTopReview());
+			} catch (NoSuchElementException e) {
+				logger.warning("No review found for product "+product.getProductName());
+			}
 		}
 
+		// Now that all the details are available, use Jackson to serialize the product list into a JSON string
 		ObjectMapper mapper = new ObjectMapper();
-		System.out.println(mapper.writeValueAsString(searchResults));
+		System.out.println(mapper.writeValueAsString(products));
 	}
 }
 
