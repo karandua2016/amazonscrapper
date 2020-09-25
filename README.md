@@ -7,7 +7,7 @@ A headless browser is a browser process that runs in the background and is capab
 ## Prerequisites
 Java 1.8+
 
-Windows Machine - The project contains only the Web Driver for Chrome on Windows
+Windows Machine - The project contains Web Driver only for Chrome on Windows
 
 Google Chrome 85.0.4183.38+ - The Bundled Chrome Driver supports minimum this version of Chrome
 
