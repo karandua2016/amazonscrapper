@@ -21,4 +21,8 @@ Google Chrome 85.0.4183.38+ - The Bundled Chrome Driver supports minimum this ve
 
 3. If the search term is multi-word, enclose it in double-quotes
 
-    ```java -jar amazonscapper.jar "Mobile Phones"```
+    ```java -jar amazonscapper.jar "fiction books"```
+    
+## Assumption
+Amazon is sometimes notorious for publishing full page promotions for a searched product. For e.g. following is sometimes returned for search term - Mobile Phones. https://imgur.com/1JTtUH4
+The scrapper app is written to support standard search results like https://imgur.com/IpuMOeG
