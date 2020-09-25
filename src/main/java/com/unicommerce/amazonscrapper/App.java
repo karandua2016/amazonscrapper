@@ -30,7 +30,12 @@ public class App
 
 	public static void main( String[] args ) throws JsonProcessingException
 	{
-
+		
+		if(args.length == 0) {
+			logger.severe("No search term entered.");
+			System.exit(0);
+		}
+		
 		// Set logger level to INFO
 		logger.setLevel(Level.INFO);
 

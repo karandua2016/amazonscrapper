@@ -53,6 +53,7 @@
 							<goal>single</goal>
 						</goals>
 						<configuration>
+							<finalName>amazonscrapper</finalName>
 							<archive>
 								<manifest>
 									<mainClass>
@@ -63,6 +64,7 @@
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
+							<appendAssemblyId>false</appendAssemblyId>
 						</configuration>
 					</execution>
 				</executions>
