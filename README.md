@@ -12,7 +12,7 @@ Windows Machine - The project contains Web Driver only for Chrome on Windows
 Google Chrome 85.0.4183.38+ - The Bundled Chrome Driver supports minimum this version of Chrome
 
 ## Running the Program
-1. Download the jar and ChromeDriver.exe file from the target directory to your Windows machine. Make sure both these files exist at the same location.
+1. Download the amazonscrapper.jar and ChromeDriver.exe file from the target directory to your Windows machine. Make sure both these files exist at the same location on your machine.
 2. Use the following command using command prompt from the directory (in which the downloaded files exist) to run the app
 
     ```java -jar amazonscrapper.jar <search term>```
