@@ -5,10 +5,13 @@
 package com.unicommerce.amazonscrapper.pojos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /*
  * POJO for holding product details. Contains annotations for serializing/deserializing to/from JSON string
  */
+
+@JsonPropertyOrder({"productName", "productImageUrl", "productPrice", "bestProductReview"})
 public class Product {
 	
 	private String productName;
@@ -16,7 +19,7 @@ public class Product {
 	@JsonIgnore
 	private String productLink;
 	
-	private String bestProductReview;
+	private Review bestProductReview;
 	private String productPrice;
 	private String productImageUrl;
 	
@@ -32,10 +35,10 @@ public class Product {
 	public void setProductLink(String productLink) {
 		this.productLink = productLink;
 	}
-	public String getBestProductReview() {
+	public Review getBestProductReview() {
 		return bestProductReview;
 	}
-	public void setBestProductReview(String bestProductReview) {
+	public void setBestProductReview(Review bestProductReview) {
 		this.bestProductReview = bestProductReview;
 	}
 	
@@ -51,5 +54,31 @@ public class Product {
 	public void setProductImageUrl(String productImageUrl) {
 		this.productImageUrl = productImageUrl;
 	}
+	
+	public class Review {
+		
+		String reviewerName;
+		String reviewTitle;
+		String reviewText;
+		
+		public String getReviewerName() {
+			return reviewerName;
+		}
+		public void setReviewerName(String reviewerName) {
+			this.reviewerName = reviewerName;
+		}
+		public String getReviewTitle() {
+			return reviewTitle;
+		}
+		public void setReviewTitle(String reviewTitle) {
+			this.reviewTitle = reviewTitle;
+		}
+		public String getReviewText() {
+			return reviewText;
+		}
+		public void setReviewText(String reviewText) {
+			this.reviewText = reviewText;
+		}
 
+	}
 }

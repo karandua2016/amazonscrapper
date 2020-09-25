@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class App 
 {
-	static final String chromeDriverPath = "chromedriver.exe" ;
+	static final String chromeDriverPath = "target/chromedriver.exe" ;
 	static final String amazonUrl = "https://www.amazon.in";
 	static Logger logger = Logger.getLogger(App.class.getName());
 	static final int TOP_SEARCH_COUNT = 4;

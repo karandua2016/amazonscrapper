@@ -11,6 +11,9 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.unicommerce.amazonscrapper.pojos.Product;
+import com.unicommerce.amazonscrapper.pojos.Product.Review;
+
 /*
  * Class holding utility methods to fetch elements from a web page
  */
@@ -20,7 +23,9 @@ public class SearchElementGetter {
 	private final static String NAME_XPATH = ".//h2//a";
 	private final static String PRICE_XPATH = ".//span[@class='a-price-whole']";
 	private final static String IMAGE_URL_XPATH = ".//img";
-	private final static String REVIEW_URL_XPATH = "//div[@data-hook='review-collapsed']//span";
+	private final static String REVIEWER_NAME_PATH = "//div[@class='a-profile-content']//span[@class='a-profile-name']";
+	private final static String REVIEW_TITLE_XPATH = "//a[contains(@class,'review-title')]//span";
+	private final static String REVIEW_TEXT_XPATH = "//div[@data-hook='review-collapsed']//span";
 
 	private final static String SEARCH_BOX_ID="twotabsearchtextbox";
 	private final static String SUBMIT_BUTTON_XPATH="//input[@type='submit']";
@@ -108,8 +113,15 @@ public class SearchElementGetter {
 	}
 
 	// Doesn't return null if review not found. Exception Needed to be handled by the caller.
-	public String getTopReview() throws NoSuchElementException{
-		return webDriver.findElement(By.xpath(REVIEW_URL_XPATH)).getText();
+	public Review getTopReview() throws NoSuchElementException{
+		Review review = new Product().new Review();
+		String text = webDriver.findElement(By.xpath(REVIEW_TEXT_XPATH)).getText();
+		String reviewer = webDriver.findElement(By.xpath(REVIEWER_NAME_PATH)).getAttribute("innerHTML");
+		String title = webDriver.findElement(By.xpath(REVIEW_TITLE_XPATH)).getAttribute("innerHTML");
+		review.setReviewerName(reviewer);
+		review.setReviewText(text);
+		review.setReviewTitle(title);
+		return review;
 	}
 
 }
