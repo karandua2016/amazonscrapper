@@ -82,6 +82,11 @@ public class App
 		logger.info("Parsing product details for the top "+TOP_SEARCH_COUNT+" products");
 		List<WebElement> searchResultsDiv = elementGetter.getSearchResult();
 		List<Product> products = new ArrayList<Product>();
+		
+		if(searchResultsDiv.size() == 0) {
+			logger.severe("No products found for the search term. Aborting.");
+			System.exit(0);
+		}
 
 		// Now iterate all the search results to populate product details
 		for(int i = 0; i < TOP_SEARCH_COUNT && i<searchResultsDiv.size(); i++) {
@@ -113,7 +118,10 @@ public class App
 
 		// Now that all the details are available, use Jackson to serialize the product list into a JSON string
 		ObjectMapper mapper = new ObjectMapper();
-		System.out.println(mapper.writeValueAsString(products));
+		System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(products));
+		
+		// Finally quit the driver
+		driver.quit();
 	}
 }
 
