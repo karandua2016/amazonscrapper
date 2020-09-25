@@ -13,7 +13,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unicommerce.amazonscrapper.SearchElementGetter.PRODUCT_ELEMENT_TYPE;
+import com.unicommerce.amazonscrapper.pojos.Product;
+import com.unicommerce.amazonscrapper.utils.SearchElementGetter;
+import com.unicommerce.amazonscrapper.utils.SearchElementGetter.PRODUCT_ELEMENT_TYPE;
 
 import java.util.logging.Logger;
 

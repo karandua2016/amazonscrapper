@@ -2,7 +2,7 @@
  * @author Karan Dua
  */
 
-package com.unicommerce.amazonscrapper;
+package com.unicommerce.amazonscrapper.utils;
 
 import java.util.List;
 

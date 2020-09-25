@@ -2,7 +2,7 @@
  * @author Karan Dua
  */
 
-package com.unicommerce.amazonscrapper;
+package com.unicommerce.amazonscrapper.pojos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
